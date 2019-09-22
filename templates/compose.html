@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+
+
+{% block body %}
+
+<script type="text/javascript">
+  //<![CDATA[
+
+
+//]]>
+  </script>
+
+  <form action="{{ request.path }}" method="post" class="compose">
+
+    <div style="margin-bottom:5px">
+      <table>
+        <tr>
+          <td width="70">
+          Name
+          </td>
+          <td>
+          <input id="full_name" name="full_name"  type="text" class="title" value="{{ entry.full_name if entry else "" }}"/>
+          </td>
+          <td>
+            <div id="addr_t">  </div>
+          </td>
+        </tr>
+        <tr>
+          <td width="100">
+          Address
+          </td>
+          <td>
+          <input name="address" type="text" class="title" value="{{ entry.address if entry else "" }}"/>
+          </td>
+        </tr>
+        <tr>
+          <td width="70">
+          Phone number
+          </td>
+          <td>
+          <input id="telephone" name="telephone" type="text"  value="{{ entry.telephone if entry else "" }}"/>
+          </td>
+          <td>
+            <div id="tel_text" ></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <div style="float:right"><a href="http://daringfireball.net/projects/markdown/syntax">{{ _("Syntax documentation") }}</a></div>
+      <input type="submit" value="{{ _("Save changes") if entry else _("Save contact") }}" class="submit"/>
+      &nbsp;<a href="{{ "/entry/" + entry.slug if entry else "/" }}">{{ _("Cancel") }}</a>
+    </div>
+    {% if entry %}
+      <input type="hidden" name="id" value="{{ entry.id }}"/>
+    {% end %}
+    {% module xsrf_form_html() %}
+  </form>
+{% end %}
+
+{% block bottom %}
+
+  <script type="text/javascript">
+  //<![CDATA[
+
+   function oninput_s() {
+
+     if (!full_name.value){
+       addr_t.innerHTML = '<font color="red"> Not filled! </font>';
+     }
+     else{
+       addr_t.innerHTML = '';
+     }
+
+     if (!telephone.value){
+       tel_text.innerHTML = '<font color="red"> Not filled! </font>';
+     }
+     else{
+       tel_text.innerHTML = '';
+     }
+
+      return;
+    }
+
+   full_name.oninput = oninput_s;
+   telephone.oninput = oninput_s;
+
+
+
+    $(function() {
+      $("input[name=title]").select();
+      $("form.compose").submit(function() {
+          var required = ["full_name", "telephone"];
+          var required_t = ["addr_t", "tel_text"];
+          var form = $(this).get(0);
+          for (var i = 0; i < required.length; i++) {
+              if (!form[required[i]].value) {
+                  $(form[required[i]]).select();
+                  document.getElementById(required_t[i]).innerHTML = '<font color="red"> Not filled! </font>';
+                  alert(`Please fill row ${form[required[i]].name} !`);
+                  return false;
+              }
+              else{
+                document.getElementById(required_t[i]).innerHTML = '';
+              }
+          }
+          return true;
+      });
+    });
+
+  //]]>
+  </script>
+{% end %}

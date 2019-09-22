@@ -1,0 +1,38 @@
+<div class="entry">
+  <h1><a href="/entry/{{ entry.slug }}">{{ entry.full_name }}</a></h1>
+<!--  <div class="date">{{ locale.format_date(entry.published, full_format=True, shorter=True) }}</div>-->
+
+   <div style="float:right">
+          {% if current_user %}
+
+            <div class="admin"><a href="/compose?id={{ entry.id }}">{{ _("Edit this contact") }}</a></div>
+            <div class="admin"><a href="/remove?id={{ entry.id }}">{{ _("Remove this contact") }}</a></div>
+
+          {% else %}
+            {% raw _('<a href="%(url)s">Sign in</a> to compose/edit') % {"url": "/auth/login?next=" + url_escape(request.uri)} %}
+          {% end %}
+        </div>
+
+  <table wigth="800">
+        <tr >
+          <td width=400>
+            <div class="body">Telephone:</div>
+          </td>
+            <td width=400>
+            <div class="body">Address:</div>
+          </td>
+        </tr>
+
+      <tr >
+          <td >
+              <b> <div class="body">{% raw entry.telephone %}</div> </b>
+          </td>
+            <td>
+            <div class="body">{% raw entry.address %}</div>
+          </td>
+        </tr>
+  </table>
+  {% if current_user %}
+<!--    <div class="admin"><a href="/compose?id={{ entry.id }}">{{ _("Edit this contact") }}</a></div>-->
+  {% end %}
+</div>
